@@ -5,7 +5,7 @@
 	<title>慕课七夕主题</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="pageA.css">
-	<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
 	<script src="Jquery_Transit.js" type="text/javascript"></script>
 	<style type="text/css">
 
@@ -32,15 +32,34 @@
 
 	<script type="text/javascript">
 		$(function() {
-			$('button:first').click(() => {
-				// 10秒钟 ，走到0.5 也就是页面中间位置
-				var distX = calculateDist('x', 0.5);
-				var distY = calculateDist('y', 0.5);
-				walkRun(10000, distX, distY);
+
+			var container = $('#content');
+			var swipe = Swipe(container);
+			var boy = BoyWalk();
+
+			$('button').click(() => {
+				//第一次走
+				boy.walkTo(2000, 0.2)
+					.then(function() {
+						//第一次走路完成
+						boy.setColor('red');
+					}).then(function() {
+						//第二次走
+						return boy.walkTo(2000, 0.4);
+					}).then(function() {
+						//第二次走路完成
+						boy.setColor('yellow');
+					}).then(function() {
+						//第三次走
+						return boy.walkTo(2000, 0.6);
+					}).then(function() {
+						//第三次走路完成
+						boy.setColor('blue');
+					});
 			});
 		})
 	</script>
 	<script src="Swipe.js" type="text/javascript"></script>
-	<script src="Qixi.js" type="text/javascript"></script>
+	<script src="BoyWalk.js" type="text/javascript"></script>
 </body>
 </html>
