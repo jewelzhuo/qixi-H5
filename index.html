@@ -15,6 +15,7 @@
 <body>
 	<div id="content">
 		<ul class="content-wrap">
+			<!-- 第一个页面 -->
 			<li>
 				<div class="a_background">
 					<div class="a_background_top"></div>
@@ -29,6 +30,7 @@
 					<div class="cloud cloud2"></div>
 				</div>
 			</li>
+			<!-- 第二个页面 -->
 			<li>
 				<!-- 背景图 -->
 				<div class="b_background"></div>
@@ -42,6 +44,8 @@
 					<!-- 灯 -->
 					<div class="lamp"></div>
 				</div>
+				<!-- 飞鸟 -->
+				<div class="bird"></div>
 			</li>
 			<li> 页面3 </li>
 		</ul>
@@ -63,8 +67,8 @@
 				swipe.scrollTo(distX, time);
 			};
 			swipe.scrollTo(container.width(), 0);
-			//var boy = BoyWalk();
-			BoyWalk();
+			var boy = BoyWalk();
+			
 			// $('button').click(() => {
 			// 	//太阳转动
 			// 	$('#sun').addClass('rotation');
@@ -81,45 +85,54 @@
 			// 		})
 			// });
 			
-			function doorAction(left, right, time) {
-				var doorLeft = $('.door-left');
-				var doorRight = $('.door-right');
-				var count = 2;
-				var defer = $.Deferred();
-				// 等待开门完成
-				function complete() {					
-					if (count == 1) {
-						defer.resolve();
-						return;
-					};
-					count--;
+			var bird = {
+				elem: $('.bird'),
+				fly: function() {
+					this.elem.addClass('birdFly');
+					this.elem.transition({
+						right: container.width()
+					}, 15000, 'linear');
 				}
-
-				doorLeft.transition({
-					'left': left
-				}, time, complete);
-
-				doorRight.transition({
-					'left': right
-				}, time, complete);
-
-				return defer;
 			};
+			
+			function startRun() {
+				boy.walkTo(2000, 0.5)
+					.then(() => {
+						//暂停走路
+						boy.stopWalk();
+					})
+					.then(() => {
+						//开门
+						return openDoor();
+					})
+					.then(() => {
+						//开灯
+						lamp.bright();
+					})
+					.then(() => {
+						//走进商店
+						return boy.toShop(2000);
+					})
+					.then(() => {
+						return boy.talkFlower(1000);
+					})
+					.then(() => {
+						//走出商店
+						return boy.outShop(2000);
+					})
+					.then(() => {
+						return shutDoor();
+					})
+					.then(() => {
+						//关灯
+						lamp.dark();
+					});
+			}
 
-			function openDoor() {
-				return doorAction('-50%', '100%', 2000);
-			};
-
-			function shutDoor() {
-				return doorAction('0%', '50%', 2000);
-			};
-
-			$('button:first').click(() => {
-				openDoor();
+			$('button:first').click(() => {				
+				startRun();
 			});
-			$('button:last').click(() => {
-				shutDoor();
-			});			
+				
 		})
 	</script>
 	<script src="Swipe.js" type="text/javascript"></script>

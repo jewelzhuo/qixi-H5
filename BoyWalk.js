@@ -1,3 +1,50 @@
+///////////////
+////灯动画/////
+//////////////
+var lamp = {
+	elem: $('.b_background'),
+	bright: function() {
+		this.elem.addClass('lamp-bright');
+	},
+	dark: function() {
+		this.elem.removeClass('lamp-bright');
+	}
+};	
+
+////门动画/////
+function doorAction(left, right, time) {
+	var doorLeft = $('.door-left');
+	var doorRight = $('.door-right');
+	var count = 2;
+	var defer = $.Deferred();
+	// 等待开门完成
+	function complete() {					
+		if (count == 1) {
+			defer.resolve();
+			return;
+		};
+		count--;
+	};
+
+	doorLeft.transition({
+		'left': left
+	}, time, complete);
+
+	doorRight.transition({
+		'left': right
+	}, time, complete);
+
+	return defer;
+};
+
+function openDoor() {
+	return doorAction('-50%', '100%', 2000);
+};
+
+function shutDoor() {
+	return doorAction('0%', '50%', 2000);
+};
+
 /**
  * [BoyWalk description]
  * @param {[type]} argument [description]
@@ -81,19 +128,91 @@ function BoyWalk() {
 		return dl;
 	};
 
+	let instanceX;
+	//走进商店	
+	function walkToShop(runTime) {
+		restoreWalk();
+		//设置异步
+		let defer = $.Deferred();
+		//门的坐标
+		let doorObj = $('.door');
+		let doorOffsetLeft = doorObj.offset().left;
+		//男孩的坐标
+		let boyOffsetLeft = $boy.offset().left;
+		//当前需要移动的坐标
+		instanceX = (doorOffsetLeft + doorObj.width() / 2) - (boyOffsetLeft + $boy.width() / 2);
+		//开始走路
+		let walkPlay = startRun({
+			transform: `translateX(${instanceX}px),scale(0.3, 0.3)`,
+			opacity: 0.1
+		}, runTime);
+		//走路完毕
+		walkPlay.done(() => {
+			$boy.css({
+				opacity: 0
+			});
+			defer.resolve();
+		});
+
+		return defer;
+	};
+
+	//走出商店
+	function walkOutShop(runTime) {
+		restoreWalk();
+		// 设置异步
+		let defer = $.Deferred();
+		//开始走路
+		let walkPlay = startRun({
+			transform: `translateX(${instanceX}px),scale(1, 1)`,
+			opacity: 1
+		}, runTime);
+		//走路完毕
+		walkPlay.done(() => {
+			defer.resolve();
+		});
+
+		return defer;
+	};
+
+	function talkFlower(time) {
+		let defer = $.Deferred();
+		//增加延时等待效果
+		setTimeout(() => {
+			//取花
+			$boy.addClass('slowFlolerWalk');
+			defer.resolve();
+		}, time);
+
+		return defer;
+	};
+
 	return {
+		// 开始走路
 		walkTo: function(time, proportionX, proportionY) {
 			var distX = calculateDist('x', proportionX);
 			var distY = calculateDist('y', proportionY);
 			return walkRun(time, distX, distY);
 		},
-
-		stopWalk: function(argument) {
+		// 停止走路
+		stopWalk: function() {
 			pauseWalk();
 		},
 
 		setColor: function(value) {
 			$boy.css('background-color', value);
+		},
+		// 走进商店
+		toShop: function(time) {
+			return walkToShop(time);
+		},
+		// 走出商店
+		outShop: function(time) {
+			return walkOutShop(time);
+		},
+		//取花
+		talkFlower: function(time) {
+			return talkFlower(time);
 		}
 	}
 }
