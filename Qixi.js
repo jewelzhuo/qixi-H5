@@ -180,7 +180,7 @@ function BoyWalk() {
 		//增加延时等待效果
 		setTimeout(() => {
 			//取花
-			$boy.addClass('slowFlolerWalk');
+			$boy.addClass('slowFlowerWalk');
 			defer.resolve();
 		}, time);
 
@@ -213,6 +213,30 @@ function BoyWalk() {
 		//取花
 		talkFlower: function(time) {
 			return talkFlower(time);
+		},
+		setFlowerWalk: function() {
+			$boy.addClass('slowFlowerWalk');
+		},
+		// 获取小男孩宽度
+		getWidth: function() {
+			return $boy.width();
+		},
+		// 复位初始状态
+		resetOriginal: function() {
+			this.stopWalk();
+			// 恢复图片
+			$boy.removeClass('slowWalk slowFlowerWalk').addClass('boyOriginal');
+		},
+		rotate: function(callback) {
+			restoreWalk();
+			$boy.addClass('boy-rotate');
+			// 监听转身完毕
+			if(callback) {
+				$boy.on('animationend', function() {
+					callback();
+					$(this).off();
+				});
+			}
 		}
 	}
 }

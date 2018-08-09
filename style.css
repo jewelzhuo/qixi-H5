@@ -46,6 +46,74 @@ button {
 	background: url("./images/boy.png") -0px -291px no-repeat;
 }
 
+.boyOriginal {
+	background-position: -150px 0px;
+}
+
+/*男孩转身*/
+
+.boy-rotate {
+	-webkit-animation-name: boy-rotate;
+	-webkit-animation-duration: 850ms;
+	-webkit-animation-timing-function: step-start;
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-iteration-count: 1;
+
+	-moz-animation-name: boy-rotate;
+	-moz-animation-duration: 850ms;
+	-moz-animation-timing-function: step-start;
+	-moz-animation-fill-mode: forwards;
+	-moz-animation-iteration-count: 1;
+}
+
+@-webkit-keyframes boy-rotate {
+	0% {
+    	background-position: -603px -291px;
+    }
+    16.7% {
+    	background-position: -150px -0px;
+    }
+    33.4% {
+    	background-position: -453px -291px;
+    }
+    50.1% {
+    	background-position: -0px -0px;
+    }
+    66.8% {
+    	background-position: -903px -291px;
+    }
+    83.5% {
+    	background-position: -753px -291px;
+    }
+    100% {
+    	background-position: -603px -291px;
+    }
+}
+
+@-moz-keyframes boy-rotate {
+	0% {
+    	background-position: -603px -291px;
+    }
+    16.7% {
+    	background-position: -150px -0px;
+    }
+    33.4% {
+    	background-position: -453px -291px;
+    }
+    50.1% {
+    	background-position: -0px -0px;
+    }
+    66.8% {
+    	background-position: -903px -291px;
+    }
+    83.5% {
+    	background-position: -753px -291px;
+    }
+    100% {
+    	background-position: -603px -291px;
+    }
+}
+
 .slowWalk {
 	/*规定 @keyframes 动画的名称。*/
 	-webkit-animation-name: person-slow;
@@ -61,12 +129,12 @@ button {
 	-moz-animation-timing-function: steps(1, start);
 }
 
-.slowFlolerWalk {
-	-webkit-animation-name: person-floler-slow;
+.slowFlowerWalk {
+	-webkit-animation-name: person-flower-slow;
 	-webkit-animation-duration: 950ms;
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-timing-function: step-start;
-	-moz-animation-name: person-floler-slow;
+	-moz-animation-name: person-flower-slow;
 	-moz-animation-duration: 950ms;
 	-moz-animation-iteration-count: infinite;
 	-moz-animation-timing-function: step-start;
@@ -110,7 +178,7 @@ button {
 }
 
 /*带花走*/
-@-webkit-keyframes person-floler-slow {
+@-webkit-keyframes person-flower-slow {
 	0% {
 	    background-position: -453px -0px;
 	}
@@ -128,7 +196,7 @@ button {
 	}
 }
 
-@-moz-keyframes person-floler-slow {
+@-moz-keyframes person-flower-slow {
 	0% {
 	    background-position: -453px -0px;
 	}

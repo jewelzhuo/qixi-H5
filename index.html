@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="pageA.css">
 	<link rel="stylesheet" type="text/css" href="pageB.css">
+	<link rel="stylesheet" type="text/css" href="pageC.css">
 	<script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
 	<script src="Jquery_Transit.js" type="text/javascript"></script>
 	<style type="text/css">
@@ -47,7 +48,37 @@
 				<!-- 飞鸟 -->
 				<div class="bird"></div>
 			</li>
-			<li> 页面3 </li>
+			<!-- 第三个页面 -->
+			<li>
+				<!-- 背景图 -->
+				<div class="c_background">
+					<div class="c_background_top"></div>
+					<div class="c_background_middle"></div>
+					<div class="c_background_bottom"></div>
+				</div>
+				<!-- 小女孩 -->
+				<div class="girl"></div>
+				<!-- 水波 -->
+				<div class="bridge-bottom">
+					<div class="water">
+						<div id="water1" class="water_1"></div>
+						<div id="water2" class="water_2"></div>
+						<div id="water3" class="water_3"></div>
+						<div id="water4" class="water_4"></div>
+					</div>
+				</div>
+				<!-- 星星 -->
+				<ul class="stars">
+					<li class="stars1"></li>
+					<li class="stars2"></li>
+					<li class="stars3"></li>
+					<li class="stars4"></li>
+					<li class="stars5"></li>
+					<li class="stars6"></li>
+				</ul>
+				<!-- 慕课网logo图 -->
+                <div class="logo"></div>
+			</li>
 		</ul>
 		<div id="boy" class="charactor"></div>
 		<div class="button">
@@ -59,14 +90,16 @@
 	<script type="text/javascript">
 		$(function() {
 
-			var container = $('#content');
-			
+			var container = $('#content');			
 			var swipe = Swipe(container);
+			var visualWidth = container.width();
+			var visualHeight = container.height();
+
 			function scrollTo(time, proportionX) {
 				var distX = container.width() * proportionX;
 				swipe.scrollTo(distX, time);
 			};
-			swipe.scrollTo(container.width(), 0);
+			swipe.scrollTo(visualWidth * 2, 0);
 			var boy = BoyWalk();
 			
 			// $('button').click(() => {
@@ -85,57 +118,136 @@
 			// 		})
 			// });
 			
-			var bird = {
-				elem: $('.bird'),
-				fly: function() {
-					this.elem.addClass('birdFly');
-					this.elem.transition({
-						right: container.width()
-					}, 15000, 'linear');
+			// var bird = {
+			// 	elem: $('.bird'),
+			// 	fly: function() {
+			// 		this.elem.addClass('birdFly');
+			// 		this.elem.transition({
+			// 			right: container.width()
+			// 		}, 15000, 'linear');
+			// 	}
+			// };
+			
+			// function startRun() {
+			// 	boy.walkTo(2000, 0.5)
+			// 		.then(() => {
+			// 			//暂停走路
+			// 			boy.stopWalk();
+			// 		})
+			// 		.then(() => {
+			// 			//开门
+			// 			return openDoor();
+			// 		})
+			// 		.then(() => {
+			// 			//开灯
+			// 			lamp.bright();
+			// 		})
+			// 		.then(() => {
+			// 			//走进商店
+			// 			return boy.toShop(2000);
+			// 		})
+			// 		.then(() => {
+			// 			//取花
+			// 			return boy.talkFlower(1000);
+			// 		})
+			// 		.then(() => {
+			// 			//飞鸟
+			// 			bird.fly();
+			// 		})
+			// 		.then(() => {
+			// 			//走出商店
+			// 			return boy.outShop(2000);
+			// 		})
+			// 		.then(() => {
+			// 			return shutDoor();
+			// 		})
+			// 		.then(() => {
+			// 			//关灯
+			// 			lamp.dark();
+			// 		});
+			// }
+
+			// $('button:first').click(() => {				
+			// 	startRun();
+			// });
+			
+			let getValue = function(className) {
+				var $elem = $('' + className + '');
+				// 走路的路线坐标
+				return {
+					height: $elem.height(),
+					top: $elem.position().top
+				};
+			};
+			// 桥的Y轴
+			let bridgeY = function() {
+				let data = getValue('.c_background_middle');
+				return data.top;
+			}();
+
+			let girl = {
+				elem: $('.girl'),
+				getHeight: function() {
+					return this.elem.height();
+				},
+				setOffset: function() {
+					this.elem.css({
+						left: visualWidth / 2,
+						top: bridgeY - this.getHeight()
+					});
+				},
+				getOffset: function() {
+					return this.elem.offset();
+				},
+				getWidth: function() {
+					return this.elem.width();
+				},
+				rotate: function() {
+					this.elem.addClass('girl-rotate')
 				}
 			};
-			
-			function startRun() {
-				boy.walkTo(2000, 0.5)
-					.then(() => {
-						//暂停走路
-						boy.stopWalk();
-					})
-					.then(() => {
-						//开门
-						return openDoor();
-					})
-					.then(() => {
-						//开灯
-						lamp.bright();
-					})
-					.then(() => {
-						//走进商店
-						return boy.toShop(2000);
-					})
-					.then(() => {
-						return boy.talkFlower(1000);
-					})
-					.then(() => {
-						//走出商店
-						return boy.outShop(2000);
-					})
-					.then(() => {
-						return shutDoor();
-					})
-					.then(() => {
-						//关灯
-						lamp.dark();
-					});
-			}
 
-			$('button:first').click(() => {				
-				startRun();
-			});
-				
+			girl.setOffset();
+
+			boy.setFlowerWalk();
+
+			let logo = {
+				elem: $('.logo'),
+				run: function() {
+					this.elem.addClass('logolightSpeedIn')
+						.on('animationend', function() {
+							this.elem.addClass('logoshake').off();
+						});
+				}
+			};
+
+			$('button:first').click(() => {	
+				boy.walkTo(2000, 0.15)
+					.then(() => {
+						let proportionY = (bridgeY - girl.getHeight()) / visualHeight;
+						return boy.walkTo(1500, 0.25, proportionY);
+					})
+					.then(() => {
+						let proportionX = (girl.getOffset().left - boy.getWidth() + girl.getWidth () / 5) / visualWidth;
+						return boy.walkTo(1500, proportionX);
+					})
+					.then(() => {
+						boy.resetOriginal();
+					})
+					.then(() => {
+						// 增加转身动作
+						setTimeout(() => {
+							girl.rotate();
+							boy.rotate(() => {
+								//开始logo动画
+								logo.run();
+							});
+						}, 1000);
+					})
+			});	
 		})
 	</script>
 	<script src="Swipe.js" type="text/javascript"></script>
-	<script src="BoyWalk.js" type="text/javascript"></script>
+	<script src="Qixi.js" type="text/javascript"></script>
 </body>
 </html>

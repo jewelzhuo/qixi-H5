@@ -11,7 +11,7 @@ function Swipe(container) {
 
 	var element = container.find(':first');
 
-	var slides = element.find('li');
+	var slides = element.find('>');
 
 	var width = container.width();
 	var height = container.height();
