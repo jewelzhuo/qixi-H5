@@ -28,12 +28,57 @@
 	background-size: 100% 100%;
 }
 
+/*雪花*/
+
+#snowflake {
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	/*background-image: url(C://Users/Jewel/Documents/GitHub/qixi-H5/images/snowflake/sonwflake1.png);*/
+}
+
+.snowRoll {
+	position: absolute;
+	opacity: 0;
+	-webkit-animation-name: mySnow;
+	-webkit-animation-duration: 20s;
+	-moz-animation-name: mySnow;
+	-moz-animation-duration: 20s;
+}
+
+@-webkit-keyframes mySnow {
+	0% {
+		bottom: 100%;
+	}
+	50% {
+		-webkit-transform: rotate(1080deg);
+	}
+	100% {
+		-webkit-transform: rotate(0deg) translate3d(50px, 50px, 50px);
+	}
+}
+
+@-moz-keyframes mySnow {
+	0% {
+		bottom: 100%;
+	}
+	50% {
+		-moz-transform: rotate(1080deg);
+	}
+	100% {
+		-moz-transform: rotate(0deg) translate3d(50px, 50px, 50px);
+	}
+}
+
 /* 小女孩 */
 
 .girl {
 	position: absolute;
-	/*top: 37%;
-	right: 40%;*/
+	top: 37%;
+	right: 40%;
 	width: 151px;
 	height: 291px;
 	background: url(./images/girl.png) -755px -0px no-repeat;

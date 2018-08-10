@@ -81,8 +81,10 @@
 			</li>
 		</ul>
 		<div id="boy" class="charactor"></div>
+		<!-- 飘花 -->
+		<div id="snowflake"></div>
 		<div class="button">
-			<button>开门</button>
+			<button>开始飘花</button>
 			<button>关门</button>
 		</div>
 	</div>
@@ -171,80 +173,151 @@
 			// 	startRun();
 			// });
 			
-			let getValue = function(className) {
-				var $elem = $('' + className + '');
-				// 走路的路线坐标
-				return {
-					height: $elem.height(),
-					top: $elem.position().top
+			// let getValue = function(className) {
+			// 	var $elem = $('' + className + '');
+			// 	// 走路的路线坐标
+			// 	return {
+			// 		height: $elem.height(),
+			// 		top: $elem.position().top
+			// 	};
+			// };
+			// // 桥的Y轴
+			// let bridgeY = function() {
+			// 	let data = getValue('.c_background_middle');
+			// 	return data.top;
+			// }();
+
+			// let girl = {
+			// 	elem: $('.girl'),
+			// 	getHeight: function() {
+			// 		return this.elem.height();
+			// 	},
+			// 	setOffset: function() {
+			// 		this.elem.css({
+			// 			left: visualWidth / 2,
+			// 			top: bridgeY - this.getHeight()
+			// 		});
+			// 	},
+			// 	getOffset: function() {
+			// 		return this.elem.offset();
+			// 	},
+			// 	getWidth: function() {
+			// 		return this.elem.width();
+			// 	},
+			// 	rotate: function() {
+			// 		this.elem.addClass('girl-rotate')
+			// 	}
+			// };
+
+			// girl.setOffset();
+
+			// boy.setFlowerWalk();
+
+			// let logo = {
+			// 	elem: $('.logo'),
+			// 	run: function() {
+			// 		this.elem.addClass('logolightSpeedIn')
+			// 			.on('animationend', function() {
+			// 				this.elem.addClass('logoshake').off();
+			// 			});
+			// 	}
+			// };
+
+			// $('button:first').click(() => {	
+			// 	boy.walkTo(2000, 0.15)
+			// 		.then(() => {
+			// 			let proportionY = (bridgeY - girl.getHeight()) / visualHeight;
+			// 			return boy.walkTo(1500, 0.25, proportionY);
+			// 		})
+			// 		.then(() => {
+			// 			let proportionX = (girl.getOffset().left - boy.getWidth() + girl.getWidth () / 5) / visualWidth;
+			// 			return boy.walkTo(1500, proportionX);
+			// 		})
+			// 		.then(() => {
+			// 			boy.resetOriginal();
+			// 		})
+			// 		.then(() => {
+			// 			// 增加转身动作
+			// 			setTimeout(() => {
+			// 				girl.rotate();
+			// 				boy.rotate(() => {
+			// 					//开始logo动画
+			// 					logo.run();
+			// 				});
+			// 			}, 1000);
+			// 		})
+			// });	
+			
+			function snowflake() {
+				// 飘花容器
+				let $flakeContainer = $('#snowflake');		
+				// 飘花图
+				let snowflakeURL = [
+					'http://img.mukewang.com/55adde120001d34e00410041.png',
+        			'http://img.mukewang.com/55adde2a0001a91d00410041.png',
+        			'http://img.mukewang.com/55adde5500013b2500400041.png',
+        			'http://img.mukewang.com/55adde62000161c100410041.png',
+        			'http://img.mukewang.com/55adde7f0001433000410041.png',
+        			'http://img.mukewang.com/55addee7000117b500400041.png'
+				];
+				//随机获取飘花图片
+				function getUrlName() {
+					return snowflakeURL[Math.floor(Math.random() * 6)];
 				};
-			};
-			// 桥的Y轴
-			let bridgeY = function() {
-				let data = getValue('.c_background_middle');
-				return data.top;
-			}();
+				
+				// 创建一个飘花元素
+				function createSnowBox() {
+					let url = getUrlName();
+	
+					return $('<div class="snowbox"></div>').css({
+						'position': 'absolute',
+						'zIndex': 100000,
+						'top': '-41px',
+						'width': '41px',
+						'height': '41px',
+						'backgroundSize': 'cover',
+						'backgroundImage': `url(${url})`
+					}).addClass('snowRoll');
+				};
 
-			let girl = {
-				elem: $('.girl'),
-				getHeight: function() {
-					return this.elem.height();
-				},
-				setOffset: function() {
-					this.elem.css({
-						left: visualWidth / 2,
-						top: bridgeY - this.getHeight()
+				setInterval(() => {
+					// 运动轨迹
+					let startPositionLeft = Math.random() * visualWidth - 100,
+						stratOpacity	  = 1,
+						endPositionTop    = visualHeight - 40,
+						endPositionLeft   = startPositionLeft - 100 + Math.random() * 500,
+						duration          = visualHeight * 10 + Math.random() * 5000;
+
+					// 随机透明到，不小于0.5
+					let randomStart = Math.random();
+					randomStart = randomStart < 0.5 ? stratOpacity : randomStart;
+
+					// 创建一个雪花
+					let $flake = createSnowBox();
+					// 设置起始点
+					$flake.css({
+						'left': startPositionLeft,
+						'opacity': randomStart
 					});
-				},
-				getOffset: function() {
-					return this.elem.offset();
-				},
-				getWidth: function() {
-					return this.elem.width();
-				},
-				rotate: function() {
-					this.elem.addClass('girl-rotate')
-				}
+					// 加入到容器
+					$flakeContainer.append($flake)
+
+					// 开始执行动画
+					$flake.transition({
+						top: endPositionTop,
+						left: endPositionLeft,
+						opacity: 0.7
+					}, duration, 'ease-out', function() {
+						// 结束后删除
+						$(this).remove();
+					});
+
+				}, 200);
 			};
 
-			girl.setOffset();
-
-			boy.setFlowerWalk();
-
-			let logo = {
-				elem: $('.logo'),
-				run: function() {
-					this.elem.addClass('logolightSpeedIn')
-						.on('animationend', function() {
-							this.elem.addClass('logoshake').off();
-						});
-				}
-			};
-
-			$('button:first').click(() => {	
-				boy.walkTo(2000, 0.15)
-					.then(() => {
-						let proportionY = (bridgeY - girl.getHeight()) / visualHeight;
-						return boy.walkTo(1500, 0.25, proportionY);
-					})
-					.then(() => {
-						let proportionX = (girl.getOffset().left - boy.getWidth() + girl.getWidth () / 5) / visualWidth;
-						return boy.walkTo(1500, proportionX);
-					})
-					.then(() => {
-						boy.resetOriginal();
-					})
-					.then(() => {
-						// 增加转身动作
-						setTimeout(() => {
-							girl.rotate();
-							boy.rotate(() => {
-								//开始logo动画
-								logo.run();
-							});
-						}, 1000);
-					})
-			});	
+			$('button:first').click(() => {
+				snowflake();
+			});
 		})
 	</script>
 	<script src="Swipe.js" type="text/javascript"></script>
